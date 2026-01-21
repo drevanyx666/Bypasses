@@ -1,0 +1,30 @@
+Gc = getgc(false)
+
+for I = 1, #Gc do
+	Func = Gc[I]
+	if type(Func) == "function" and islclosure(Func) then
+		Info = debug.getinfo(Func)
+		
+		if Info.source and Info.source:find("Anti Cheat") then
+			Consts = debug.getconstants(Func)
+			for Idx = 1, #Consts do
+				C = Consts[Idx]
+				if type(C) == "string" then
+					debug.setconstant(Func, Idx, "")
+				elseif type(C) == "number" then
+					debug.setconstant(Func, Idx, 0)
+				end
+			end
+			
+			Ups = debug.getupvalues(Func)
+			for Name, Val in Ups do
+				debug.setupvalue(Func, Name, nil)
+			end
+		end
+	end
+end
+
+game:GetService("StarterGui"):SetCore("SendNotification", {
+	Title = "ez bypassed",
+	Text = "works rn yayy"
+})
