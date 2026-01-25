@@ -1,6 +1,5 @@
 --!strict
 
-local Bynew: any = loadstring(game:HttpGet("https://raw.githubusercontent.com/noctryxzen/Bynew/refs/heads/main/ByModule.luau"))()
 local Event: RemoteEvent = game:GetService("ReplicatedStorage").Events.RemoteEvent
 
 local o; o = hookmetamethod(game, "__namecall", newcclosure(function(...: any): ...any
@@ -27,63 +26,34 @@ local o2; o2 = hookfunction(Event.FireServer, newcclosure(function(...: any): ..
 	return o2(...)
 end))
 
-task.spawn(function(): ()
-	Bynew.Hook({
-		ScriptName = "BClient",
-		Constants = {"WalkSpeedInvalidRead", "WalkSpeedWriteHook"}
-	})
-	
-	Bynew.Hook({
-		ScriptName = "BClient",
-		Constants = {"JumpHeightInvalidRead", "JumpHeightWriteHook"}
-	})
-	
-	Bynew.Hook({
-		ScriptName = "BClient",
-		Constants = {"CFrameWriteHook", "CFrameChange", "FastTeleport"}
-	})
-	
-	Bynew.Hook({
-		ScriptName = "BClient",
-		Constants = {"NoClipNoTouch", "NoClipCanCollide"}
-	})
-	
-	Bynew.Hook({
-		ScriptName = "BClient",
-		Constants = {"BodyMover"}
-	})
-	
-	Bynew.Hook({
-		ScriptName = "BClient",
-		Constants = {"ACF", "ACTrigger", "ACKickTrigger"}
-	})
-end)
+warn("im s- i will say it but lemme listen for ac first.")
 
-task.wait(1)
+local ACFunctions: {[any]: boolean} = {}
 
-Bynew.Hook({ScriptName = "BClient"}, function(f: any): ()
-	local c: {any}? = nil
-	pcall(function(): ()
-		c = debug.getconstants(f)
-	end)
-	
-	if not c then return end
-	
-	local noob: {string} = {
-		"WalkSpeed", "JumpHeight", "CFrame", "NoClip", 
-		"BodyMover", "Kick", "Ban", "ACF", "ACTrigger"
-	}
-	
-	for i: number, const: any in c do
-		if type(const) == "string" then
-			for j: number, bad: string in noob do
-				if const:find(bad) then
-					debug.setconstant(f, 1, "")
-					return
+for i: number, v: any in getgc(false) do
+	if type(v) == "function" and islclosure(v) and not isexecutorclosure(v) then
+		local inf: {[string]: any} = debug.getinfo(v)
+		if inf.source and inf.source:find("BClient") then
+			local c: {any}? = nil
+			pcall(function(): ()
+				c = debug.getconstants(v)
+			end)
+			
+			if c then
+				for j: number, con: any in c do
+					if type(con) == "string" and con == "ACTrigger" then
+						ACFunctions[v] = true
+						local og = v
+						hookfunction(v, newcclosure(function(...: any): ...any
+							warn("loll blocked the ac func ez, im tuff right?")
+							return
+						end))
+						break
+					end
 				end
 			end
 		end
 	end
-end)
+end
 
 warn("wait a second am i- su- superman?")
