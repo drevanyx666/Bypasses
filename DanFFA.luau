@@ -22,3 +22,4 @@ local o2; o2 = hookfunction(Remote.FireServer, newcclosure(function(...)
 	end
 	return o2(...)
 end))
+warn("ok")
